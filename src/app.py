@@ -4,12 +4,12 @@ import pandas as pd
 import streamlit as st
 
 try:
-    from .data_loader import load_anime, load_synopsis, load_ratings, clean_text
+    from .data_loader import DEFAULT_DATA_DIR, load_anime, load_synopsis, load_ratings, clean_text
     from .collaborative_model import CFRecommender
     from .content_model import ContentRecommender
     from .app_helpers import combine_item_text, build_numeric_features, merge_synopsis_robust
 except ImportError:
-    from data_loader import load_anime, load_synopsis, load_ratings, clean_text
+    from data_loader import DEFAULT_DATA_DIR, load_anime, load_synopsis, load_ratings, clean_text
     from collaborative_model import CFRecommender
     from content_model import ContentRecommender
     from app_helpers import combine_item_text, build_numeric_features, merge_synopsis_robust
@@ -227,9 +227,11 @@ st.caption("Place the Kaggle dataset under ./data and get Top-N recommendations.
 
 with st.sidebar:
     st.header("Configuration")
-    anime_path = st.text_input("anime.csv path", value="data/anime.csv")
-    synopsis_path = st.text_input("anime_with_synopsis.csv path", value="data/anime_with_synopsis.csv")
-    ratings_path = st.text_input("rating_complete.csv path", value="data/rating_complete.csv")
+    anime_path = st.text_input("anime.csv path", value=str(DEFAULT_DATA_DIR / "anime.csv"))
+    synopsis_path = st.text_input(
+        "anime_with_synopsis.csv path", value=str(DEFAULT_DATA_DIR / "anime_with_synopsis.csv")
+    )
+    ratings_path = st.text_input("rating_complete.csv path", value=str(DEFAULT_DATA_DIR / "rating_complete.csv"))
     mode = st.radio("Mode", ["Hybrid", "Content-only"], index=0)
     like_threshold = st.slider("Like threshold (rating >=", 1, 10, 7)
     candidate_size = st.slider("CF candidate size (M)", 50, 500, 200, step=50)
